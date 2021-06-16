@@ -40,6 +40,8 @@ class Application extends Container
     $this->bootLogger();
     $this->bootProviders();
 
+    $this->set("Brid\Core\Contracts\Foundation\Container", fn() => static::getInstance());
+
     return $this;
 
   }

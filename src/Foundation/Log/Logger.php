@@ -28,11 +28,6 @@ class Logger extends AbstractLogger
    */
   protected array $loggers;
 
-  /**
-   * @var bool
-   */
-  protected bool $booted = false;
-
   public function __construct()
   {
     $this->bootLoggers();
@@ -86,10 +81,6 @@ class Logger extends AbstractLogger
 
   public function log($level, $message, array $context = [])
   {
-
-    if (!$this->booted) {
-      $this->bootLoggers();
-    }
 
     foreach ($this->loggers as $logger)
     {

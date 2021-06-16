@@ -44,6 +44,19 @@ if (! function_exists('storage_path')) {
   }
 }
 
+if (! function_exists('resource_path')) {
+  /**
+   * Get the path to resource.
+   *
+   * @param  string  $path
+   * @return string
+   */
+  function resource_path(string $path = ''): string
+  {
+    return path('/resources' . \Illuminate\Support\Str::start($path, '/'));
+  }
+}
+
 if (! function_exists('config')) {
   /**
    * @param string $key
@@ -53,6 +66,34 @@ if (! function_exists('config')) {
   function config(string $key, mixed $default = null): mixed
   {
     return \Illuminate\Support\Arr::get(app()->get('config') ?? [], $key, $default);
+  }
+}
+
+if (! function_exists('dispatch')) {
+  /**
+   * Dispatch a job to its appropriate handler.
+   *
+   * @param mixed $job
+   * @return void
+   */
+  function dispatch(mixed $job): void
+  {
+    app(\Brid\Core\Queue\QueueManager::class)->push($job);
+  }
+}
+
+if (! function_exists('dispatch_now')) {
+  /**
+   * Dispatch a job to sync handler.
+   *
+   * @param mixed $job
+   * @return void
+   */
+  function dispatch_now(mixed $job): void
+  {
+    app(\Brid\Core\Queue\QueueManager::class)
+      ->connection('sync')
+      ->push($job);
   }
 }
 
