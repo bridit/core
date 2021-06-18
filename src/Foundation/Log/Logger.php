@@ -28,14 +28,20 @@ class Logger extends AbstractLogger
    */
   protected array $loggers;
 
+  /**
+   * Logger constructor.
+   */
   public function __construct()
   {
     $this->bootLoggers();
   }
 
+  /**
+   *
+   */
   protected function bootLoggers(): void
   {
-    
+
     $logging = config('logging');
     $default = $logging['default'] ?? 'stack';
 
@@ -51,7 +57,7 @@ class Logger extends AbstractLogger
         continue;
       }
 
-      $this->loggers[] = $logger;
+      $this->loggers[$channel] = $logger;
     }
 
   }
@@ -79,6 +85,20 @@ class Logger extends AbstractLogger
 
   }
 
+  /**
+   * @param string $channel
+   * @return LoggerInterface
+   */
+  public function on(string $channel): LoggerInterface
+  {
+    return $this->loggers[$channel];
+  }
+
+  /**
+   * @param mixed $level
+   * @param string $message
+   * @param array $context
+   */
   public function log($level, $message, array $context = [])
   {
 
@@ -86,7 +106,7 @@ class Logger extends AbstractLogger
     {
       $logger->{$level}($message, $context);
     }
-    
+
   }
 
 }
