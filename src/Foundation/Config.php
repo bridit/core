@@ -11,6 +11,34 @@ class Config implements \ArrayAccess
   private array $values = [];
 
   /**
+   * @param string $key
+   * @return bool
+   */
+  public function has(string $key): bool
+  {
+    return Arr::has($this->values, $key);
+  }
+
+  /**
+   * @param string $key
+   * @param mixed $default
+   * @return mixed
+   */
+  public function get(string $key, mixed $default = null): mixed
+  {
+    return Arr::get($this->values, $key, $default);
+  }
+
+  /**
+   * @param string $key
+   * @param mixed $value
+   */
+  public function set(string $key, mixed $value): void
+  {
+    Arr::set($this->values, $key, $value);
+  }
+
+  /**
    * Determine if a given offset exists.
    *
    * @param  string  $key
@@ -18,7 +46,7 @@ class Config implements \ArrayAccess
    */
   public function offsetExists($key)
   {
-    return isset($this->values[$key]);
+    return $this->has($key);
   }
 
   /**
@@ -29,7 +57,7 @@ class Config implements \ArrayAccess
    */
   public function offsetGet($key)
   {
-    return Arr::get($this->values, $key);
+    return $this->get($key);
   }
 
   /**
@@ -41,7 +69,7 @@ class Config implements \ArrayAccess
    */
   public function offsetSet($key, $value)
   {
-    $this->values[$key] = $value;
+    $this->set($key, $value);
   }
 
   /**
@@ -52,7 +80,7 @@ class Config implements \ArrayAccess
    */
   public function offsetUnset($key)
   {
-    unset($this->values[$key]);
+    Arr::forget($this->values, $key);
   }
 
   /**
@@ -63,7 +91,7 @@ class Config implements \ArrayAccess
    */
   public function __get($key)
   {
-    return $this->values[$key] ?? null;
+    return $this->get($key);
   }
 
   /**
@@ -75,7 +103,7 @@ class Config implements \ArrayAccess
    */
   public function __set($key, $value)
   {
-    $this->offsetSet($key, $value);
+    $this->set($key, $value);
   }
 
 }
