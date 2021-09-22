@@ -2,12 +2,14 @@
 
 namespace Brid\Core\Foundation;
 
+use ArrayAccess;
 use Brid\Core\Foundation\Log\Logger;
 use Carbon\Carbon;
 use DI\Definition\ArrayDefinition;
+use DI\Definition\ValueDefinition;
 use Dotenv\Dotenv;
 
-class Application extends Container
+class Application extends Container implements ArrayAccess
 {
 
   /**
@@ -90,7 +92,7 @@ class Application extends Container
       return;
     }
 
-    $config = [];
+    $config = new Config();
 
     foreach (glob(path('/config/') . '*.php') as $fileName)
     {
@@ -99,7 +101,7 @@ class Application extends Container
       $config[$key] = require $fileName;
     }
 
-    $this->set('config', new ArrayDefinition($config));
+    $this->set('config', new ValueDefinition($config));
 
   }
 
@@ -151,6 +153,87 @@ class Application extends Container
       $booted[] = $serviceProvider::class;
     }
 
+  }
+
+  /**
+   * Determine if a given offset exists.
+   *
+   * @param  string  $key
+   * @return bool
+   */
+  public function bound($key)
+  {
+    return $this->offsetExists($key);
+  }
+
+  /**
+   * Determine if a given offset exists.
+   *
+   * @param  string  $key
+   * @return bool
+   */
+  public function offsetExists($key)
+  {
+    return $this->has($key);
+  }
+
+  /**
+   * Get the value at a given offset.
+   *
+   * @param  string  $key
+   * @return mixed
+   */
+  public function offsetGet($key)
+  {
+    return $this->make($key);
+  }
+
+  /**
+   * Set the value at a given offset.
+   *
+   * @param  string  $key
+   * @param  mixed  $value
+   * @return void
+   */
+  public function offsetSet($key, $value)
+  {
+    $this->set($key, $value instanceof Closure ? $value : function () use ($value) {
+      return $value;
+    });
+  }
+
+  /**
+   * Unset the value at a given offset.
+   *
+   * @param  string  $key
+   * @return void
+   */
+  public function offsetUnset($key)
+  {
+    unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
+  }
+
+  /**
+   * Dynamically access container services.
+   *
+   * @param  string  $key
+   * @return mixed
+   */
+  public function __get($key)
+  {
+    return $this->get($key);
+  }
+
+  /**
+   * Dynamically set container services.
+   *
+   * @param  string  $key
+   * @param  mixed  $value
+   * @return void
+   */
+  public function __set($key, $value)
+  {
+    $this->offsetSet($key, $value);
   }
 
 }
