@@ -44,6 +44,9 @@ class Application extends Container implements ArrayAccess
 
     $this->set("Brid\Core\Contracts\Foundation\Container", fn() => static::getInstance());
 
+    \Illuminate\Support\Facades\Facade::setFacadeApplication($this);
+    \App\AliasLoader::getInstance(config('app.aliases', []))->register();
+
     return $this;
 
   }
