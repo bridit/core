@@ -159,6 +159,24 @@ class Application extends Container implements ArrayAccess
   }
 
   /**
+   * Register an existing instance as shared in the container.
+   *
+   * @param string $abstract
+   * @param  mixed   $instance
+   * @return mixed
+   */
+  public function instance(string $abstract, mixed $instance): mixed
+  {
+    if ($this->offsetExists($abstract)) {
+      $this->offsetUnset($abstract);
+    }
+
+    $this->offsetSet($abstract, $instance);
+
+    return $instance;
+  }
+
+  /**
    * Determine if a given offset exists.
    *
    * @param  string  $key
