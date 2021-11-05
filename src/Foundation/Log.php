@@ -30,7 +30,7 @@ class Log
    * @throws \DI\DependencyException
    * @throws \DI\NotFoundException
    */
-  protected static function getLogger(): Logger
+  public static function getLogger(): Logger
   {
     if (null !== static::$logger) {
       return static::$logger;
