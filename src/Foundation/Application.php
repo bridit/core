@@ -179,46 +179,46 @@ class Application extends Container implements ArrayAccess
   /**
    * Determine if a given offset exists.
    *
-   * @param  string  $key
+   * @param string $offset
    * @return bool
    */
-  public function bound($key)
+  public function bound(string $offset): bool
   {
-    return $this->offsetExists($key);
+    return $this->offsetExists($offset);
   }
 
   /**
    * Determine if a given offset exists.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return bool
    */
-  public function offsetExists($key)
+  public function offsetExists($offset): bool
   {
-    return $this->has($key);
+    return $this->has($offset);
   }
 
   /**
    * Get the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return mixed
    */
-  public function offsetGet($key)
+  public function offsetGet($offset): mixed
   {
-    return $this->make($key);
+    return $this->make($offset);
   }
 
   /**
    * Set the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @param  mixed  $value
    * @return void
    */
-  public function offsetSet($key, $value)
+  public function offsetSet($offset, mixed $value): void
   {
-    $this->set($key, $value instanceof Closure ? $value : function () use ($value) {
+    $this->set($offset, $value instanceof Closure ? $value : function () use ($value) {
       return $value;
     });
   }
@@ -226,21 +226,21 @@ class Application extends Container implements ArrayAccess
   /**
    * Unset the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return void
    */
-  public function offsetUnset($key)
+  public function offsetUnset($offset): void
   {
-    unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
+    unset($this->bindings[$offset], $this->instances[$offset], $this->resolved[$offset]);
   }
 
   /**
    * Dynamically access container services.
    *
-   * @param  string  $key
+   * @param string $key
    * @return mixed
    */
-  public function __get($key)
+  public function __get(string $key)
   {
     return $this->get($key);
   }
@@ -248,11 +248,11 @@ class Application extends Container implements ArrayAccess
   /**
    * Dynamically set container services.
    *
-   * @param  string  $key
+   * @param string $key
    * @param  mixed  $value
    * @return void
    */
-  public function __set($key, $value)
+  public function __set(string $key, mixed $value)
   {
     $this->offsetSet($key, $value);
   }

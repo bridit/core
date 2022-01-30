@@ -41,46 +41,46 @@ class Config implements \ArrayAccess
   /**
    * Determine if a given offset exists.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return bool
    */
-  public function offsetExists($key)
+  public function offsetExists($offset): bool
   {
-    return $this->has($key);
+    return $this->has($offset);
   }
 
   /**
    * Get the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return mixed
    */
-  public function offsetGet($key)
+  public function offsetGet($offset): mixed
   {
-    return $this->get($key);
+    return $this->get($offset);
   }
 
   /**
    * Set the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @param  mixed  $value
    * @return void
    */
-  public function offsetSet($key, $value)
+  public function offsetSet($offset, mixed $value): void
   {
-    $this->set($key, $value);
+    $this->set($offset, $value);
   }
 
   /**
    * Unset the value at a given offset.
    *
-   * @param  string  $key
+   * @param  string  $offset
    * @return void
    */
-  public function offsetUnset($key)
+  public function offsetUnset($offset): void
   {
-    Arr::forget($this->values, $key);
+    Arr::forget($this->values, $offset);
   }
 
   /**
